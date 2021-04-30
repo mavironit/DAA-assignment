@@ -2,66 +2,46 @@
 #include <list>
 
 using namespace std;
+int start;
 
+class Graph {
+  int numVertices;
+  list<int> *adjLists;
+  bool *visited;
 
-class Graph
-{
-	int V; // No. of vertices
-
-	
-	list<int> *adj;
-public:
-	Graph(int V); 
-	void addEdge(int v, int w);
-
-	void BFS(int s,int strt);
+   public:
+  Graph(int V);
+  void addEdge(int src, int dest);
+  void DFS(int vertex);
 };
 
-Graph::Graph(int V)
-{
-	this->V = V;
-	adj = new list<int>[V];
+Graph::Graph(int vertices) {
+  numVertices = vertices;
+  adjLists = new list<int>[vertices];
+  visited = new bool[vertices];
 }
 
-void Graph::addEdge(int v, int w)
-{
-	adj[v].push_back(w);
+void Graph::addEdge(int src, int dest) {
+  adjLists[src].push_front(dest);
 }
 
-void Graph::BFS(int s,int strt)  // s represents the vertice you want to start search with
-{
-	bool *visited = new bool[V];
-	for(int i = 0; i < V; i++)
-		visited[i] = false;
+void Graph::DFS(int vertex) {
+  visited[vertex] = true;
+  list<int> adjList = adjLists[vertex];
 
-	list<int> queue;
+  cout << vertex +start<< " ";
 
-	visited[s] = true;
-	queue.push_back(s);
-
-	list<int>::iterator i;
-
-	while(!queue.empty())
-	{
-		s = queue.front();
-		cout << s + strt << " ";
-		queue.pop_front();
-		
-		for (i = adj[s].begin(); i != adj[s].end(); ++i)
-		{
-			if (!visited[*i])
-			{
-				visited[*i] = true;
-				queue.push_back(*i);
-			}
-		}
-	}
+  list<int>::iterator i;
+  for (i = adjList.begin(); i != adjList.end(); ++i)
+    if (!visited[*i])
+      DFS(*i);
 }
+
 
 
 int main()
 {
-	int nv,ne,start,dir,help,ep,stf,ext;
+	int nv,ne,dir,help,ep,stf,ext;
 	begin:
 	cout<<"Enter the no. of vertices : ";
 	cin>>nv;
@@ -130,9 +110,9 @@ int main()
 
     cout<<"\n\nEnter the vertex from which you want to start the traversal : ";
     cin>>stf;
-	cout << "\n\nFollowing is Breadth First Traversal "
+	cout << "\n\nFollowing is Depth First Traversal "
 		<< "(starting from vertex "<<stf<<") :   ";
-	g.BFS(stf-start,start);
+	g.DFS(stf-start);
   cout<<"\n\nPress 1 to search again / any other key to exit : ";
   cin>>ext;
   if(ext == 1)
